@@ -6,6 +6,7 @@ import requests
 WXT_ACCESS_TOKEN    = None #Replace None with your access token between quotes.
 EMAIL_OLD           = None #Replace None with the email address to change
 EMAIL_NEW           = None #Replace None with the email address to change to
+DisplayName         = None #Replace None with the display Name
 
 
 #sets the header to be used for authentication and data format to be sent.
@@ -25,13 +26,13 @@ def FindUserID(the_header,Old_Email):
             id= item['id']
     return(id)
 
-def Change_Mail(the_header,UserID,New_Email):
+def Change_Mail(the_header,UserID,New_Email,DName):
     uri = 'https://api.ciscospark.com/v1'
     api_call= '/people/'+UserID
-    body = {"toPersonEmail": "gifbot@webex.bot", "text": "Hello"}
+    body = {"emails": New_Email, "DisplayName": DName}
     resp = requests.put(uri+api_call, json=body, headers=the_header)
-    resp = resp.json()
-
+    resp = resp.status_code()
+    print(resp)
     return(id)
 
 
@@ -40,7 +41,8 @@ if __name__ == '__main__':
     if WXT_ACCESS_TOKEN==None or EMAIL_OLD==None:
         sys.exit("Please check that variables WXT_ACCESS_TOKEN, EMAIL_OLD and EMAIL_NEW have values assigned.")
     header=setHeaders()
-    #passing the old email address to find the user_id of the user
+    #passing the old email address to find the UserID of the user
     user_id=FindUserID(header,EMAIL_OLD)
-    Change_Mail(the_header,user_id,EMAIL_NEW)
+    #Change EMail address of user based on found UserID
+    Change_Mail(the_header,user_id,EMAIL_NEW,DisplayName)
     print(user_id)
