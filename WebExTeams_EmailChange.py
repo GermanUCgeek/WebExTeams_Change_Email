@@ -11,7 +11,7 @@ DisplayName         = None #Replace None with the display Name
 
 #sets the header to be used for authentication and data format to be sent.
 def setHeaders():
-    accessToken_hdr = 'Bearer ' + ACCESS_TOKEN
+    accessToken_hdr = 'Bearer ' + WXT_ACCESS_TOKEN
     webex_teams_header = {'Authorization': accessToken_hdr, 'Content-Type': 'application/json; charset=utf-8'}
     return (webex_teams_header)
 
@@ -24,16 +24,19 @@ def FindUserID(the_header,Old_Email):
     resp = resp.json()
     for item in resp["items"]:
             id= item['id']
+    print(id)
     return(id)
 
 def Change_Mail(the_header,UserID,New_Email,DName):
+    New_Email_array=[New_Email]
     uri = 'https://api.ciscospark.com/v1'
     api_call= '/people/'+UserID
-    body = {"emails": New_Email, "DisplayName": DName}
+    body = {"emails": New_Email_array[0], "displayName": DName}
+    print(uri + api_call)
+    print(body)
     resp = requests.put(uri+api_call, json=body, headers=the_header)
-    resp = resp.status_code()
-    print(resp)
-    return(id)
+    print(resp.status_code)
+    return()
 
 
 
@@ -44,5 +47,4 @@ if __name__ == '__main__':
     #passing the old email address to find the UserID of the user
     user_id=FindUserID(header,EMAIL_OLD)
     #Change EMail address of user based on found UserID
-    Change_Mail(the_header,user_id,EMAIL_NEW,DisplayName)
-    print(user_id)
+    Change_Mail(header,user_id,EMAIL_NEW,DisplayName)
